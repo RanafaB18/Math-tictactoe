@@ -1,6 +1,12 @@
+import GameGrid from "./components/GameGrid"
+import Player from "./components/Player"
+
 const App = () => {
   return (
-    <div>App</div>
+    <main className="w-screen h-screen flex flex-col justify-around">
+      <GameGrid />
+      <Player />
+    </main>
   )
 }
 
