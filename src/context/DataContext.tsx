@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { DataContextType, IGridCard, IPlayerCard } from "../interfaces";
 import { socket } from "../socket"
+import { useLocation } from "react-router-dom";
 
 export const DataContext = createContext<DataContextType | null>(null);
 
@@ -29,17 +30,26 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
     number: "",
   });
 
+  const room = useLocation().pathname
+
   function onConnect() {
     console.log("Connected");
+    socket.emit('join-room', (room))
   }
 
   useEffect(() => {
+    socket.connect()
     socket.on('connect', onConnect)
+    socket.on('share-cards', (cards) => {
+      console.log("Cards, ", cards);
+      setPlayerCardData(cards)
+    })
 
     return () => {
       socket.off('connect', onConnect)
+      socket.disconnect();
     }
-  })
+  }, [])
   return (
     <DataContext.Provider
       value={{
