@@ -37,16 +37,25 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
     socket.emit('join-room', (room))
   }
 
+  function shareCards(cards: IPlayerCard[]) {
+      console.log("Cards, ", cards);
+      setPlayerCardData(cards);
+  }
+
+  function updateGridData(newGrid: IGridCard[]) {
+    setGridData(newGrid)
+  }
+
   useEffect(() => {
     socket.connect()
     socket.on('connect', onConnect)
-    socket.on('share-cards', (cards) => {
-      console.log("Cards, ", cards);
-      setPlayerCardData(cards)
-    })
+    socket.on('share-cards', shareCards)
+    socket.on('update-all-players', updateGridData)
 
     return () => {
       socket.off('connect', onConnect)
+      socket.off('share-cards', shareCards)
+      socket.off('update-all-players', updateGridData)
       socket.disconnect();
     }
   }, [])

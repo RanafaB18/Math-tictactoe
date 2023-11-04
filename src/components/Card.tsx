@@ -1,5 +1,6 @@
 import useDataContext from "../hooks/useDataContext";
 import { IPlayerCard } from "../interfaces";
+import { socket } from "../socket";
 
 const Card = ({ card }: { card: IPlayerCard }) => {
   const data = useDataContext();
@@ -13,7 +14,7 @@ const Card = ({ card }: { card: IPlayerCard }) => {
   };
   const setGridToCard = () => {
     data?.setGridData((prevData) => {
-      return prevData.map((gridItem) => {
+      const newGridData = prevData.map((gridItem) => {
         if (
           gridItem.id === data.currentGridItem.id &&
           gridItem.number === ""
@@ -23,6 +24,8 @@ const Card = ({ card }: { card: IPlayerCard }) => {
         }
         return gridItem;
       });
+      socket.emit('update-grid', (newGridData))
+      return newGridData
     });
   };
   const removeCardFromPlayer = () => {
