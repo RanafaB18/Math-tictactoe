@@ -23,7 +23,6 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
     { id: 4, number: 7 },
     { id: 5, number: 9 },
   ]);
-  const [currentCard, setCurrentCard] = useState<IPlayerCard>({ id: 0, number: 0 });
   const [currentGridItem, setCurrentGridItem] = useState<IGridCard>({
     id: 0,
     number: "",
@@ -34,12 +33,10 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
       value={{
         userIsSelectingACard,
         gridData,
-        currentCard,
         currentGridItem,
         playerCardData,
         setPlayerCardData,
         setCurrentGridItem,
-        setCurrentCard,
         setGridData,
         setUserIsSelectingACard,
       }}

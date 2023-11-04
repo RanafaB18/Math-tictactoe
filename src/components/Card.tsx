@@ -5,13 +5,9 @@ const Card = ({ card }: { card: IPlayerCard }) => {
   const data = useDataContext();
 
   const playerCardSelectedHandler = () => {
-    setCurrentCard()
     unblurBg();
     setGridToCard();
   };
-  const setCurrentCard = () => {
-    data?.setCurrentCard(card)
-  }
   const unblurBg = () => {
     data?.setUserIsSelectingACard(false);
   };
