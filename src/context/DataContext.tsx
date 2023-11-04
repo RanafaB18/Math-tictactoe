@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { DataContextType, IGridCard, IPlayerCard } from "../interfaces";
+import { socket } from "../socket"
 
 export const DataContext = createContext<DataContextType | null>(null);
 
@@ -28,6 +29,17 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
     number: "",
   });
 
+  function onConnect() {
+    console.log("Connected");
+  }
+
+  useEffect(() => {
+    socket.on('connect', onConnect)
+
+    return () => {
+      socket.off('connect', onConnect)
+    }
+  })
   return (
     <DataContext.Provider
       value={{
