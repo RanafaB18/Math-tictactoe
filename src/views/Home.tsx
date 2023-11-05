@@ -8,7 +8,7 @@ const Home = () => {
   const [showReloadWarning, setShowReloadWarning] = useState(false);
   const data = useRouteContext();
   useEffect(() => {
-    if (sessionStorage.getItem("is-reloaded") && data?.isReload) {
+    if (sessionStorage.getItem("is-reloaded")) {
       console.log("Reloaded");
       console.log("You forfeited");
       setShowReloadWarning(true);

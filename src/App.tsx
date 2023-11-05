@@ -7,23 +7,31 @@ import { Link, useNavigate } from "react-router-dom";
 import useRouteContext from "./hooks/useRouteContext";
 const App = () => {
   const [gameIsFull, setGameIsFull] = useState(false);
-  const data = useRouteContext()
+  const [showWaitModal, setShowWaitModal] = useState(true);
+  const data = useRouteContext();
   const navigate = useNavigate();
   function gameIsFullHandler() {
     setGameIsFull(true);
   }
+
+  function startGame() {
+    console.log("Ready");
+
+    setShowWaitModal(false);
+  }
   useEffect(() => {
     socket.on("filled-game", gameIsFullHandler);
+    socket.on("ready", startGame);
     if (sessionStorage.getItem("is-reloaded")) {
-      data?.setIsReload(true)
-      navigate('/', { replace: true });
-    }
-    else {
+        data?.setIsReload(true);
+        navigate("/", { replace: true });
+      } else {
       sessionStorage.setItem("is-reloaded", "false");
     }
 
     return () => {
       socket.off("filled-game", gameIsFullHandler);
+      socket.off("ready", startGame);
     };
   }, []);
   if (gameIsFull) {
@@ -43,19 +51,31 @@ const App = () => {
   }
   return (
     <DataContextProvider>
-      <main className={`${data?.winner && "blur-sm"} relative w-screen h-screen flex flex-col justify-around`}>
+      <main
+        className={`${
+          (data?.winner || showWaitModal) && "blur-sm"
+        } relative w-screen h-screen flex flex-col justify-around`}
+      >
         <GameGrid />
         <Player />
       </main>
-        {data?.winner && (
+      {data?.winner && (
         <div className="absolute flex flex-col p-4 inset-0 -top-32 w-96 h-fit m-auto text-center bg-white border rounded-lg shadow-sm">
           <>
             <p>Opponent Surrendered</p>
             <p>Victory</p>
           </>
-          <Link to="/" className="self-end bg-green-500 text-white py-0.5 px-3 rounded font-bold">
+          <Link
+            to="/"
+            className="self-end bg-green-500 text-white py-0.5 px-3 rounded font-bold"
+          >
             Play Again?
           </Link>
+        </div>
+      )}
+      {showWaitModal && (
+        <div className="absolute flex flex-col p-4 inset-0 -top-32 w-96 h-fit m-auto text-center bg-white border rounded-lg shadow-sm">
+          <p className="font-bold text-xl">Waiting for an opponent</p>
         </div>
       )}
     </DataContextProvider>

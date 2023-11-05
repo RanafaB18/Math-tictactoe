@@ -24,8 +24,12 @@ const Card = ({ card }: { card: IPlayerCard }) => {
         }
         return gridItem;
       });
-      socket.emit('update-grid', (newGridData))
-      socket.emit('played', data?.playerId)
+
+      console.log("user selected a card", data?.userIsSelectingACard);
+      if (data?.userIsSelectingACard) {
+        socket.emit('update-grid', (newGridData))
+        socket.emit('played', data?.playerId)
+      }
       return newGridData
     });
   };
