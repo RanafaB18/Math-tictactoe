@@ -41,6 +41,8 @@ const App = () => {
     return () => {
       socket.off("filled-game", gameIsFullHandler);
       socket.off("ready", startGame);
+      socket.off("won", winnerHandler);
+      socket.off('lost', loserHandler)
     };
   }, []);
   if (gameIsFull) {
