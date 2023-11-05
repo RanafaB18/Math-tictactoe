@@ -9,8 +9,6 @@ const Home = () => {
   const data = useRouteContext();
   useEffect(() => {
     if (sessionStorage.getItem("is-reloaded")) {
-      console.log("Reloaded");
-      console.log("You forfeited");
       setShowReloadWarning(true);
       socket.emit("reduce-count");
       sessionStorage.removeItem("is-reloaded");

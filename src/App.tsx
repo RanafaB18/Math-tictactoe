@@ -8,6 +8,7 @@ import useRouteContext from "./hooks/useRouteContext";
 const App = () => {
   const [gameIsFull, setGameIsFull] = useState(false);
   const [showWaitModal, setShowWaitModal] = useState(true);
+  const [lost, setLost] = useState(false)
   const data = useRouteContext();
   const navigate = useNavigate();
   function gameIsFullHandler() {
@@ -15,17 +16,25 @@ const App = () => {
   }
 
   function startGame() {
-    console.log("Ready");
-
     setShowWaitModal(false);
+  }
+  function winnerHandler() {
+    data?.setWinner(true)
+  }
+
+  function loserHandler() {
+    setLost(true)
   }
   useEffect(() => {
     socket.on("filled-game", gameIsFullHandler);
     socket.on("ready", startGame);
+    socket.on("won", winnerHandler);
+    socket.on('lost', loserHandler)
+
     if (sessionStorage.getItem("is-reloaded")) {
-        data?.setIsReload(true);
-        navigate("/", { replace: true });
-      } else {
+      data?.setIsReload(true);
+      navigate("/", { replace: true });
+    } else {
       sessionStorage.setItem("is-reloaded", "false");
     }
 
@@ -62,8 +71,21 @@ const App = () => {
       {data?.winner && (
         <div className="absolute flex flex-col p-4 inset-0 -top-32 w-96 h-fit m-auto text-center bg-white border rounded-lg shadow-sm">
           <>
-            <p>Opponent Surrendered</p>
+            {data?.isReload && <p>Opponent Surrendered</p>}
             <p>Victory</p>
+          </>
+          <Link
+            to="/"
+            className="self-end bg-green-500 text-white py-0.5 px-3 rounded font-bold"
+          >
+            Play Again?
+          </Link>
+        </div>
+      )}
+      {lost && (
+        <div className="absolute flex flex-col p-4 inset-0 -top-32 w-96 h-fit m-auto text-center bg-white border rounded-lg shadow-sm">
+          <>
+            <p>Better Luck Next Time</p>
           </>
           <Link
             to="/"

@@ -8,15 +8,15 @@ export const DataContext = createContext<DataContextType | null>(null);
 export const DataContextProvider = ({ children }: { children: ReactNode }) => {
   const [userIsSelectingACard, setUserIsSelectingACard] = useState(false);
   const [gridData, setGridData] = useState<Array<IGridCard>>([
-    { id: 1, number: "" },
-    { id: 2, number: "" },
-    { id: 3, number: "" },
-    { id: 4, number: "" },
-    { id: 5, number: "" },
-    { id: 6, number: "" },
-    { id: 7, number: "" },
-    { id: 8, number: "" },
-    { id: 9, number: "" },
+    { id: 1, number: "-" },
+    { id: 2, number: "-" },
+    { id: 3, number: "-" },
+    { id: 4, number: "-" },
+    { id: 5, number: "-" },
+    { id: 6, number: "-" },
+    { id: 7, number: "-" },
+    { id: 8, number: "-" },
+    { id: 9, number: "-" },
   ]);
   const [playerCardData, setPlayerCardData] = useState<IPlayerCard[]>([
     { id: 1, number: 1 },
@@ -27,19 +27,17 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
   ]);
   const [currentGridItem, setCurrentGridItem] = useState<IGridCard>({
     id: 0,
-    number: "",
+    number: "-",
   });
   const [playerId, setPlayerId] = useState("")
 
   const room = useLocation().pathname
 
   function onConnect() {
-    console.log("Connected");
     socket.emit('join-room', ({ room }))
   }
 
   function shareCards(cards: IPlayerCard[]) {
-      console.log("Cards, ", cards);
       setPlayerCardData(cards);
   }
 
@@ -48,8 +46,6 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   function updatePlayerId(id: string) {
-    console.log("ID", id);
-
     setPlayerId(id)
   }
 

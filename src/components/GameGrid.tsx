@@ -11,15 +11,12 @@ const GameGrid = () => {
   const routerData = useRouteContext()
   const [disable, setDisable] = useState(false);
   function disableHandler() {
-    console.log("player id disable", data?.playerId);
     setDisable(true);
   }
   function enableHandler() {
-    console.log("player id enable", data?.playerId);
     setDisable(false);
   }
-  function winnerHandler() {
-    console.log("Winner");
+  function winnerByForfeitHandler() {
     navigate('/', { replace: true })
     routerData?.setWinner(true);
     setTimeout(() => {
@@ -29,12 +26,12 @@ const GameGrid = () => {
   useEffect(() => {
     socket.on("disable", disableHandler);
     socket.on("enable", enableHandler);
-    socket.on("winner", winnerHandler);
+    socket.on("winner", winnerByForfeitHandler);
 
     return () => {
       socket.off("disable", disableHandler);
       socket.off("enable", enableHandler);
-      socket.off("winner", winnerHandler);
+      socket.off("winner", winnerByForfeitHandler);
     };
   }, []);
   return (

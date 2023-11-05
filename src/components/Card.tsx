@@ -17,7 +17,7 @@ const Card = ({ card }: { card: IPlayerCard }) => {
       const newGridData = prevData.map((gridItem) => {
         if (
           gridItem.id === data.currentGridItem.id &&
-          gridItem.number === ""
+          gridItem.number === "-"
           ) {
           removeCardFromPlayer()
           return { ...gridItem, number: card.number.toString() };
@@ -25,7 +25,6 @@ const Card = ({ card }: { card: IPlayerCard }) => {
         return gridItem;
       });
 
-      console.log("user selected a card", data?.userIsSelectingACard);
       if (data?.userIsSelectingACard) {
         socket.emit('update-grid', (newGridData))
         socket.emit('played', data?.playerId)
