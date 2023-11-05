@@ -3,6 +3,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Home from './views/Home'
 import App from './App'
+import { RouteDataProvider } from './context/RouterContext'
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -10,5 +11,7 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+  <RouteDataProvider>
     <RouterProvider router={router} />
+  </RouteDataProvider>
 )

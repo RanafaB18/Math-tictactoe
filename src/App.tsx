@@ -4,9 +4,10 @@ import Player from "./components/Player";
 import { DataContextProvider } from "./context/DataContext";
 import { socket } from "./socket";
 import { Link, useNavigate } from "react-router-dom";
-
+import useRouteContext from "./hooks/useRouteContext";
 const App = () => {
   const [gameIsFull, setGameIsFull] = useState(false);
+  const data = useRouteContext()
   const navigate = useNavigate();
   function gameIsFullHandler() {
     setGameIsFull(true);
@@ -14,8 +15,10 @@ const App = () => {
   useEffect(() => {
     socket.on("filled-game", gameIsFullHandler);
     if (sessionStorage.getItem("is-reloaded")) {
+      data?.setIsReload(true)
       navigate('/', { replace: true });
-    } else {
+    }
+    else {
       sessionStorage.setItem("is-reloaded", "false");
     }
 
@@ -40,10 +43,21 @@ const App = () => {
   }
   return (
     <DataContextProvider>
-      <main className="relative w-screen h-screen flex flex-col justify-around">
+      <main className={`${data?.winner && "blur-sm"} relative w-screen h-screen flex flex-col justify-around`}>
         <GameGrid />
         <Player />
       </main>
+        {data?.winner && (
+        <div className="absolute flex flex-col p-4 inset-0 -top-32 w-96 h-fit m-auto text-center bg-white border rounded-lg shadow-sm">
+          <>
+            <p>Opponent Surrendered</p>
+            <p>Victory</p>
+          </>
+          <Link to="/" className="self-end bg-green-500 text-white py-0.5 px-3 rounded font-bold">
+            Play Again?
+          </Link>
+        </div>
+      )}
     </DataContextProvider>
   );
 };

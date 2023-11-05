@@ -29,12 +29,13 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
     id: 0,
     number: "",
   });
+  const [playerId, setPlayerId] = useState("")
 
   const room = useLocation().pathname
 
   function onConnect() {
     console.log("Connected");
-    socket.emit('join-room', (room))
+    socket.emit('join-room', ({ room }))
   }
 
   function shareCards(cards: IPlayerCard[]) {
@@ -46,16 +47,23 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
     setGridData(newGrid)
   }
 
+  function updatePlayerId(id: string) {
+    console.log("ID", id);
+
+    setPlayerId(id)
+  }
+
   useEffect(() => {
     socket.connect()
     socket.on('connect', onConnect)
     socket.on('share-cards', shareCards)
     socket.on('update-all-players', updateGridData)
-
+    socket.on('send-id', updatePlayerId)
     return () => {
       socket.off('connect', onConnect)
       socket.off('share-cards', shareCards)
       socket.off('update-all-players', updateGridData)
+      socket.off('send-id', updatePlayerId)
       socket.disconnect();
     }
   }, [])
@@ -66,6 +74,7 @@ export const DataContextProvider = ({ children }: { children: ReactNode }) => {
         gridData,
         currentGridItem,
         playerCardData,
+        playerId,
         setPlayerCardData,
         setCurrentGridItem,
         setGridData,
