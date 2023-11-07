@@ -38,7 +38,7 @@ const Card = ({ card }: { card: IPlayerCard }) => {
   return (
     <button
       onClick={playerCardSelectedHandler}
-      className="w-44 h-44 shadow-lg rounded-lg bg-white"
+      className="w-auto md:w-44 h-44 shadow-lg rounded-lg bg-white"
     >
       <span className="text-3xl">{card.number}</span>
     </button>
